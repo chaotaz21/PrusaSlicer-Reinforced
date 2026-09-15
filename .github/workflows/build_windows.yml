@@ -2,15 +2,6 @@ name: Build Windows Reinforced
 
 on:
   workflow_dispatch:
-    inputs:
-      create_pdb:
-        description: 'Zip PDB files'
-        default: false
-        type: boolean
-      create_installer:
-        description: 'Create Windows installer'
-        default: false
-        type: boolean
   push:
     branches:
       - reinforced-cut
@@ -19,10 +10,36 @@ permissions:
   contents: read
 
 jobs:
-  build_win:
-    uses: Prusa-Development/PrusaSlicer-Actions/.github/workflows/build_windows.yml@legacy
-    secrets: inherit
-    with:
-      actions_branch: legacy
-      create_pdb: ${{ inputs.create_pdb || false }}
-      create_installer: ${{ inputs.create_installer || false }}
+  build_windows:
+    runs-on: windows-2022
+    timeout-minutes: 360
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Cache PrusaSlicer dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ runner.temp }}\PrusaSlicer-deps
+            deps\build
+          key: ps-2.9.6-windows-x64-${{ hashFiles('deps/**', 'CMakeLists.txt') }}
+          restore-keys: |
+            ps-2.9.6-windows-x64-
+
+      - name: Build dependencies and application
+        shell: cmd
+        run: build_win.bat -ARCH x64 -CONFIG RelWithDebInfo -STEPS all-dirty -RUN none -DESTDIR "${{ runner.temp }}\PrusaSlicer-deps"
+
+      - name: Upload Reinforced Cut Windows build
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: PrusaSlicer-Reinforced-Windows-x64
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            build/src/RelWithDebInfo/**
