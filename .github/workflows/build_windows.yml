@@ -31,8 +31,17 @@ jobs:
             ps-2.9.6-windows-x64-
 
       - name: Build dependencies and application
-        shell: cmd
-        run: build_win.bat -ARCH x64 -CONFIG RelWithDebInfo -STEPS all-dirty -RUN none -DESTDIR "${{ runner.temp }}\PrusaSlicer-deps"
+        shell: pwsh
+        run: |
+          $deps = Join-Path $env:RUNNER_TEMP 'PrusaSlicer-deps'
+          $depsCache = Join-Path $PWD 'deps\build\CMakeCache.txt'
+          $installedDeps = Join-Path $deps 'usr\local'
+          if ((Test-Path $depsCache) -and (Test-Path $installedDeps)) {
+            cmd /c "build_win.bat -ARCH x64 -CONFIG RelWithDebInfo -STEPS all-dirty -RUN none -DESTDIR `"$deps`""
+          } else {
+            cmd /c "build_win.bat -ARCH x64 -CONFIG RelWithDebInfo -STEPS all -RUN none -DESTDIR `"$deps`""
+          }
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Upload Reinforced Cut Windows build
         if: success()
