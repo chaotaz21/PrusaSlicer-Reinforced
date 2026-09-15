@@ -1,7 +1,20 @@
+# PrusaSlicer Reinforced Cut
+
+This repository is an independent development copy of **PrusaSlicer 2.9.6** for a custom large-model cutting workflow.
+
+Primary development target: **Anycubic Kobra X (FFF/FDM, 260 x 260 x 260 mm, 0.4 mm nozzle)**.
+
+Development happens on the `reinforced-cut` branch. The first custom feature is **Reinforced Cut**: keep PrusaSlicer's existing planar Cut and multiple connectors, then optionally add a strong internal reinforcement around the cut while leaving the exterior cosmetic shell unchanged. The preferred inner opening is a safe oval/ellipse instead of a naive offset copy of a complex concave contour.
+
+See [`doc/KOBRA_X_TARGET.md`](doc/KOBRA_X_TARGET.md) for printer-specific constraints and validation rules.
+
+> Experimental: do not use generated production geometry without checking the result on a copy of the model. Kobra X machine G-code will not be invented in this fork; a final bundled printer preset should be based on an official Anycubic profile or a verified export.
+
+---
 
 ![PrusaSlicer logo](/resources/icons/PrusaSlicer.png?raw=true)
 
-# PrusaSlicer
+# Upstream PrusaSlicer
 
 You may want to check the [PrusaSlicer project page](https://www.prusa3d.com/prusaslicer/).
 Prebuilt Windows, OSX and Linux binaries are available through the [git releases page](https://github.com/prusa3d/PrusaSlicer/releases) or from the [Prusa3D downloads page](https://www.prusa3d.com/drivers/). There are also [3rd party Linux builds available](https://github.com/prusa3d/PrusaSlicer/wiki/PrusaSlicer-on-Linux---binary-distributions).
@@ -62,7 +75,7 @@ these documentation pages:
 
 Sure! You can do the following to find things that are available to help with:
 * Add an [issue](https://github.com/prusa3d/PrusaSlicer/issues) to the github tracker if it isn't already present.
-* Look at [issues labeled "volunteer needed"](https://github.com/prusa3d/PrusaSlicer/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3A%22volunteer+needed%22)
+* Look at [issues labeled "volunteer needed"](https://github.com/prusa3d/PrusaSlicer/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3A%22volunteer needed%22)
 
 ### What's PrusaSlicer license?
 
