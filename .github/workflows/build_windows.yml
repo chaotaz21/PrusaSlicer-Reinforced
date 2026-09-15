@@ -1,0 +1,28 @@
+name: Build Windows Reinforced
+
+on:
+  workflow_dispatch:
+    inputs:
+      create_pdb:
+        description: 'Zip PDB files'
+        default: false
+        type: boolean
+      create_installer:
+        description: 'Create Windows installer'
+        default: false
+        type: boolean
+  push:
+    branches:
+      - reinforced-cut
+
+permissions:
+  contents: read
+
+jobs:
+  build_win:
+    uses: Prusa-Development/PrusaSlicer-Actions/.github/workflows/build_windows.yml@legacy
+    secrets: inherit
+    with:
+      actions_branch: legacy
+      create_pdb: ${{ inputs.create_pdb || false }}
+      create_installer: ${{ inputs.create_installer || false }}
